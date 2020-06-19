@@ -17,12 +17,12 @@ export default {
   data() {
     return {
       msg: "This is a Chess Board",
-      level : 8,
-      size: 40,
+      level: 8,
+      size: 40
     };
   },
   mounted() {
-    this.say("hi")
+    this.say("hi");
   },
   methods: {
     say: function(message) {
@@ -33,32 +33,32 @@ export default {
       document.getElementById("example").innerHTML = this.get_content();
     },
     get_content: function() {
-      var status = this.test_array_generator()
+      var status = this.test_array_generator();
       return this.generate_table(status);
       // return Date();
     },
     test_array_generator: function() {
-      var level = this.level
-      var ret = []
+      var level = this.level;
+      var ret = [];
       for (var i = 0; i < level; ++i) {
-        ret.push([])
+        ret.push([]);
         for (var j = 0; j < level; ++j) {
           // var it = Math.floor(Math.random() * 10) % 2
-          var it = (i + j) % 2
-          ret[i].push(it)
+          var it = (i + j) % 2;
+          ret[i].push(it);
         }
       }
-      return ret
+      return ret;
     },
     generate_table: function(status) {
-      var level = status.length
-      var size = this.size
-      size = document.body.clientWidth * 0.6 / level
+      var level = status.length;
+      var size = this.size;
+      size = (document.body.clientWidth * 0.6) / level;
       if (size > this.size) {
-        size = this.size
+        size = this.size;
       }
-      var width = size + "px"
-      var height = size + "px"
+      var width = size + "px";
+      var height = size + "px";
       // var width = "40px"
       // var height = "40px"
       var ret = "<table border=1 align='center'>";
@@ -67,18 +67,18 @@ export default {
         for (var j = 0; j < level; ++j) {
           ret += "<td width=" + width + " height=" + height;
           if (status[i][j] == 1) {
-            ret += " bgcolor='black'"
+            ret += " bgcolor='black'";
           }
-          ret += "></td>"
+          ret += "></td>";
         }
         ret += "</tr>";
       }
       ret += "</table>";
       // console.log(ret);
-      this.test_array_generator()
+      this.test_array_generator();
       return ret;
       // return Date();
-    },
+    }
   }
 };
 </script>
@@ -114,9 +114,8 @@ table {
   border: 1px solid blue;
   margin: auto;
 }
-.td{
-  width:100px;
-  overflow:hidden
+.td {
+  width: 100px;
+  overflow: hidden;
 }
-
 </style>

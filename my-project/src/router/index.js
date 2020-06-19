@@ -3,6 +3,9 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 
 import Template from '@/modules/moduleTemplate/Template'
+import ChessBoardCavans from '@/modules/moduleChessBoardCavans/ChessBoardCavans'
+
+ChessBoardCavans
 
 Vue.use(Router)
 
@@ -22,6 +25,12 @@ export default new Router({
       path: '/helloworld',
       name: 'HelloWorld',
       component: HelloWorld
+    },
+    {
+      path: '/chessboard',
+      name: 'ChessBoardCavans',
+      component: ChessBoardCavans
     }
+    
   ]
 })
