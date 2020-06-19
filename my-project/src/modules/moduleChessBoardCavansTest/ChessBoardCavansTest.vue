@@ -1,13 +1,19 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <Button v-on:click="generator()">generator</Button>
     <Button v-on:click="say('hi')">Refresh</Button>
+
     <span>level:</span>
-    <InputNumber :max="100" :min="1" v-model="level" v-on:on-change="draw()"></InputNumber>
+    <InputNumber :max="100" :min="1" v-model="level" v-on:on-change="init()"></InputNumber>
     <span>blocksize:</span>
-    <InputNumber :max="500" :min="1" v-model="size" v-on:on-change="draw()"></InputNumber>
+    <InputNumber :max="500" :min="1" v-model="size" v-on:on-change="init()"></InputNumber>
     <span>step:</span>
-    <InputNumber :max="500" :min="1" v-model="step" v-on:on-change="draw()"></InputNumber>
+    <InputNumber :max="500" :min="1" v-model="step" v-on:on-change="init()"></InputNumber>
+    <span>delta_x:</span>
+    <InputNumber :max="500" :min="1" v-model="delta_x" v-on:on-change="init()"></InputNumber>
+    <span>delta_y:</span>
+    <InputNumber :max="500" :min="1" v-model="delta_y" v-on:on-change="init()"></InputNumber>
     <br />
 
     <canvas id="cavsElem">你的浏览器不支持canvas，请升级浏览器.浏览器不支持，显示此行文本</canvas>
@@ -15,26 +21,56 @@
 </template>
 
 <script>
-
 //  import {drawArrow} from "./functions/drawarraw"
 
 export default {
-  name: "ChessBoardCavans",
+  name: "ChessBoardCavansTest",
   data() {
     return {
       msg: "This is a Chess Board",
       level: 8,
-      size: 40,
+      size: 72,
       status: "",
-      route: "",
-      step: 64
+      route: [[0, 0]],
+      step: 64,
+      delta_x: 1,
+      delta_y: 2,
+      move: "",
+      intervalidlist: []
     };
   },
   mounted() {
-    this.say("hi");
+    this.init();
   },
   methods: {
+    init: function() {
+      for (var i = 0; i < this.intervalidlist.length; ++i) {
+        clearInterval(this.intervalidlist[i]);
+      }
+      this.intervalidlist = [];
+      this.status = this.test_array_generator();
+      this.route = [[0, 0]];
+      var delta_x = this.delta_x;
+      var delta_y = this.delta_y;
+      this.move = [
+        [delta_x, delta_y],
+        [delta_x, -delta_y],
+        [-delta_x, delta_y],
+        [-delta_x, -delta_y],
+        [delta_y, delta_x],
+        [delta_y, -delta_x],
+        [-delta_y, delta_x],
+        [-delta_y, -delta_x]
+      ];
+      this.generate_table(this.status, this.route);
+      // this.generator()
+    },
+    generator: function() {
+      // this.status = this.test_array_generator();
+      this.intervalidlist.push(setInterval(this.draw, 1));
+    },
     say: function(message) {
+      // this.status = this.test_array_generator();
       // alert(message);
       this.draw();
     },
@@ -42,7 +78,7 @@ export default {
       this.get_content();
     },
     get_content: function() {
-      this.status = this.test_array_generator();
+      // this.status = this.test_array_generator();
       // 生成一条随机路径
       // this.route = this.test_route_generator()
 
@@ -50,7 +86,9 @@ export default {
       // this.route = this.test_knight_route_generator();
 
       // 生成一条在棋盘内的骑士环游路径
-      this.route = this.test_knight_route_generator_in_chess_board();
+      // this.route = this.test_knight_route_generator_in_chess_board();
+      // step by step
+      this.route = this.next_knight_route_generator_in_chess_board();
       return this.generate_table(this.status, this.route);
       // return Date();
     },
@@ -60,8 +98,9 @@ export default {
       for (var i = 0; i < level; ++i) {
         ret.push([]);
         for (var j = 0; j < level; ++j) {
-          var it = Math.floor(Math.random() * 10) % 2;
+          // var it = Math.floor(Math.random() * 10) % 2;
           // var it = (i + j) % 2;
+          var it = 0;
           ret[i].push(it);
         }
       }
@@ -86,19 +125,11 @@ export default {
       var x = Math.floor(level / 2);
       var y = Math.floor(level / 2);
       ret.push([x, y]);
-      var num = this.step
+      var num = this.step;
       for (var k = 0; k < num; ++k) {
-        var seed = Math.floor(Math.random() * 8 * 1000) % 8;
-        var knight_step = [
-          [1, 2],
-          [1, -2],
-          [-1, 2],
-          [-1, -2],
-          [2, 1],
-          [2, -1],
-          [-2, 1],
-          [-2, -1]
-        ];
+        var knight_step = this.move;
+        var move_num = knight_step.length;
+        var seed = Math.floor(Math.random() * move_num * 1000) % move_num;
         x = x + knight_step[seed][0];
         y = y + knight_step[seed][1];
 
@@ -111,27 +142,20 @@ export default {
       var ret = [];
       var x = Math.floor(level / 2);
       var y = Math.floor(level / 2);
-      x = 0
-      y = 0
+      x = 0;
+      y = 0;
       ret.push([x, y]);
-      var tmps = 0
-      var num = this.step
+      var tmps = 0;
+      var num = this.step;
       for (var k = 0; k < num; ++k) {
-        tmps++
+        tmps++;
         if (tmps >= num * 10) {
           break;
         }
-        var seed = Math.floor(Math.random() * 8 * 1000) % 8;
-        var knight_step = [
-          [1, 2],
-          [1, -2],
-          [-1, 2],
-          [-1, -2],
-          [2, 1],
-          [2, -1],
-          [-2, 1],
-          [-2, -1]
-        ];
+        var knight_step = this.move;
+        var move_num = knight_step.length;
+        var seed = Math.floor(Math.random() * move_num * 1000) % move_num;
+
         x += knight_step[seed][0];
         y += knight_step[seed][1];
         if (x >= level || y >= level || x < 0 || y < 0) {
@@ -140,10 +164,50 @@ export default {
           y -= knight_step[seed][1];
           continue;
         }
-
         ret.push([x, y]);
       }
       return ret;
+    },
+    next_knight_route_generator_in_chess_board: function() {
+      var level = this.level;
+      var ret = [];
+      var route_size = this.route.length;
+      var x = this.route[route_size - 1][0];
+      var y = this.route[route_size - 1][1];
+
+      var tmps = 0;
+      var num = 1;
+      for (var k = 0; k < num; ++k) {
+        tmps++;
+        // if (tmps >= num * 10) {
+        //   break;
+        // }
+        var knight_step = this.move;
+        var move_num = knight_step.length;
+        var seed = Math.floor(Math.random() * move_num * 1000) % move_num;
+
+        x += knight_step[seed][0];
+        y += knight_step[seed][1];
+
+        if (x >= level || y >= level || x < 0 || y < 0) {
+          k -= 1;
+          x -= knight_step[seed][0];
+          y -= knight_step[seed][1];
+          continue;
+        }
+
+        if (tmps < num * 100 && this.status[x][y] == 1) {
+          k -= 1;
+          x -= knight_step[seed][0];
+          y -= knight_step[seed][1];
+          continue;
+        }
+
+        this.status[x][y] = 1;
+
+        this.route.push([x, y]);
+      }
+      return this.route;
     },
     generate_table: function(status, route) {
       var margin = 40;
@@ -156,7 +220,7 @@ export default {
       canvas.height = margin * 2 + size * level; //千万不要用 canvas.style.height
       canvas.style.border = "1px solid #000";
 
-      // drawArrow(ctx, 100, 50, 250, 50, 1, 1, 10, 30, '#f36', 1);    
+      // drawArrow(ctx, 100, 50, 250, 50, 1, 1, 10, 30, '#f36', 1);
 
       for (var i = 0; i <= level; ++i) {
         //绘制三角形
@@ -211,7 +275,7 @@ export default {
           x += (size - rect_size) / 2;
           y += (size - rect_size) / 2;
           ctx.globalAlpha = 0.1;
-          ctx.fillRect(x, y, rect_size, rect_size);
+          // ctx.fillRect(x, y, rect_size, rect_size);
           ctx.globalAlpha = 1;
         }
         ctx.stroke();

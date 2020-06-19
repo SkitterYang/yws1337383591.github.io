@@ -2,10 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 
+import Index from '@/modules/moduleIndex/Index'
 import Template from '@/modules/moduleTemplate/Template'
-import ChessBoardCavans from '@/modules/moduleChessBoardCavans/ChessBoardCavans'
-
-ChessBoardCavans
+import ChessBoardCavansTest from '@/modules/moduleChessBoardCavansTest/ChessBoardCavansTest'
 
 Vue.use(Router)
 
@@ -13,8 +12,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Template',
-      component: Template
+      name: 'Index',
+      component: Index
     },
     {
       path: '/template',
@@ -27,9 +26,9 @@ export default new Router({
       component: HelloWorld
     },
     {
-      path: '/chessboard',
-      name: 'ChessBoardCavans',
-      component: ChessBoardCavans
+      path: '/chessboardtest',
+      name: 'ChessBoardCavansTest',
+      component: ChessBoardCavansTest
     }
     
   ]
